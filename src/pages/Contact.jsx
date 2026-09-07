@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Github, Linkedin, Send, CheckCircle2, AlertCircle, Clock, MapPin, ArrowUpRight, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Mail, Github, Linkedin, Send, CheckCircle2, AlertCircle, Clock, MapPin, ArrowUpRight, MessageCircle, Loader2 } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import Button from '../components/Button';
-import { sendContactMessage } from '../utils/contactService';
+import { sendContactForm, validateContactForm } from '../utils/contactService';
 import { personalInfo } from '../data/personalInfo';
 import { updatePageSEO } from '../utils/seo';
 
 export default function Contact() {
+  const formRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    subject: '',
     message: ''
   });
 
@@ -34,16 +36,26 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus('submitting');
     setErrorMessage('');
 
+    // Client-side input validation
+    const validationError = validateContactForm(formData);
+    if (validationError) {
+      setStatus('error');
+      setErrorMessage(validationError);
+      return;
+    }
+
+    setStatus('submitting');
+
     try {
-      await sendContactMessage(formData);
+      await sendContactForm(formRef.current);
       setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (err) {
       setStatus('error');
-      setErrorMessage(err.message || 'An unexpected error occurred. Please try again.');
+      setErrorMessage(err.message || 'Failed to send message. Please try again.');
+      // Keep formData preserved so visitor does not lose their input
     }
   };
 
@@ -73,13 +85,17 @@ export default function Contact() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent-cyan/10 rounded-full blur-3xl pointer-events-none" />
 
             {status === 'success' ? (
-              <div className="py-12 flex flex-col items-center text-center space-y-4">
+              <div
+                className="py-12 flex flex-col items-center text-center space-y-4"
+                role="status"
+                aria-live="polite"
+              >
                 <div className="w-14 h-14 rounded-full bg-accent-mint/10 border border-accent-mint/20 flex items-center justify-center text-accent-mint">
                   <CheckCircle2 className="w-7 h-7" />
                 </div>
                 <h3 className="text-2xl font-bold text-white">Message Sent Successfully</h3>
                 <p className="text-muted text-sm sm:text-base max-w-md">
-                  Thank you for reaching out! I have received your message and will reply within 24 hours.
+                  Thank you for reaching out! Your message has been delivered directly to my inbox via EmailJS. I will review and reply to your email within 24 hours.
                 </p>
                 <div className="pt-4">
                   <Button
@@ -92,9 +108,23 @@ export default function Contact() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6 relative z-10" noValidate>
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                className="space-y-6 relative z-10"
+                noValidate
+              >
+                {/* EmailJS template variable compatibility & Reply-To configuration */}
+                <input type="hidden" name="reply_to" value={formData.email} />
+                <input type="hidden" name="from_name" value={formData.name} />
+                <input type="hidden" name="from_email" value={formData.email} />
+
                 {status === 'error' && (
-                  <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-3 text-rose-300 text-sm">
+                  <div
+                    className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-3 text-rose-300 text-sm"
+                    role="alert"
+                    aria-live="assertive"
+                  >
                     <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                     <span>{errorMessage}</span>
                   </div>
@@ -112,8 +142,10 @@ export default function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     required
+                    aria-required="true"
+                    disabled={status === 'submitting'}
                     placeholder="Enter your name"
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 text-sm focus-visible:border-accent-cyan focus-visible:ring-1 focus-visible:ring-accent-cyan transition-all outline-none"
+                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 text-sm focus-visible:border-accent-cyan focus-visible:ring-1 focus-visible:ring-accent-cyan transition-all outline-none disabled:opacity-60"
                   />
                 </div>
 
@@ -129,16 +161,42 @@ export default function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     required
+                    aria-required="true"
+                    disabled={status === 'submitting'}
                     placeholder="your.email@example.com"
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 text-sm focus-visible:border-accent-cyan focus-visible:ring-1 focus-visible:ring-accent-cyan transition-all outline-none"
+                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 text-sm focus-visible:border-accent-cyan focus-visible:ring-1 focus-visible:ring-accent-cyan transition-all outline-none disabled:opacity-60"
+                  />
+                </div>
+
+                {/* Subject field */}
+                <div>
+                  <label htmlFor="subject" className="block text-xs font-mono uppercase tracking-wider text-muted mb-2">
+                    Subject <span className="text-accent-cyan">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    aria-required="true"
+                    disabled={status === 'submitting'}
+                    placeholder="Project inquiry, collaboration, or software idea"
+                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 text-sm focus-visible:border-accent-cyan focus-visible:ring-1 focus-visible:ring-accent-cyan transition-all outline-none disabled:opacity-60"
                   />
                 </div>
 
                 {/* Message field */}
                 <div>
-                  <label htmlFor="message" className="block text-xs font-mono uppercase tracking-wider text-muted mb-2">
-                    Message <span className="text-accent-cyan">*</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label htmlFor="message" className="block text-xs font-mono uppercase tracking-wider text-muted">
+                      Message <span className="text-accent-cyan">*</span>
+                    </label>
+                    <span className="text-[11px] font-mono text-muted/60">
+                      {formData.message.length}/3000
+                    </span>
+                  </div>
                   <textarea
                     id="message"
                     name="message"
@@ -146,8 +204,10 @@ export default function Contact() {
                     value={formData.message}
                     onChange={handleChange}
                     required
+                    aria-required="true"
+                    disabled={status === 'submitting'}
                     placeholder="What would you like to build or discuss?..."
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 text-sm focus-visible:border-accent-cyan focus-visible:ring-1 focus-visible:ring-accent-cyan transition-all outline-none resize-none"
+                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 text-sm focus-visible:border-accent-cyan focus-visible:ring-1 focus-visible:ring-accent-cyan transition-all outline-none resize-none disabled:opacity-60"
                   />
                 </div>
 
@@ -158,9 +218,19 @@ export default function Contact() {
                   variant="primary"
                   size="lg"
                   className="w-full"
-                  icon={Send}
+                  aria-busy={status === 'submitting'}
                 >
-                  {status === 'submitting' ? 'Sending Message...' : 'Send Message →'}
+                  {status === 'submitting' ? (
+                    <span className="inline-flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                      <span>Sending Message...</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2">
+                      <span>Send Message</span>
+                      <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  )}
                 </Button>
 
                 <p className="text-[11px] text-center text-muted/60 font-mono">
