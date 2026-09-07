@@ -33,21 +33,7 @@ export const journeyMilestones = [
     link: "/projects/striver-dsa-java",
     github: "https://github.com/CodeWithSameer04/Striver-A2Z-DSA-Sheet"
   },
-  {
-    id: "milestone-internship",
-    year: "2024",
-    type: "Experience",
-    title: "Web Developer Intern",
-    organization: "Eduminatti",
-    description: "Contributed to front-end development, building modular UI components in React, resolving layout inconsistencies across mobile and desktop devices, and ensuring accessible user interactions.",
-    responsibilities: [
-      "Assisted in developing modular web components using React and JavaScript",
-      "Identified and resolved UI layout inconsistencies across mobile and desktop devices",
-      "Collaborated with developers to streamline frontend code quality"
-    ],
-    technologies: ["React", "JavaScript", "HTML5", "CSS3", "Git"],
-    link: null
-  },
+
   {
     id: "milestone-codearena",
     year: "2026",
