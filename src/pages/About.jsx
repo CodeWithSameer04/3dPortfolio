@@ -45,22 +45,22 @@ export default function About() {
         </p>
 
         {/* Quick Identity Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 bg-[#16171E] rounded-2xl border border-white/10 text-sm font-mono">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-6 bg-[#16171E] rounded-2xl border border-white/10 text-xs sm:text-sm font-mono">
           <div>
-            <span className="text-xs text-white/40 block uppercase">Name</span>
-            <span className="text-white font-semibold">{personalInfo.name}</span>
+            <span className="text-[10px] sm:text-xs text-white/40 block uppercase">Name</span>
+            <span className="text-white font-semibold truncate block">{personalInfo.name}</span>
           </div>
           <div>
-            <span className="text-xs text-white/40 block uppercase">Role</span>
-            <span className="text-orange-400 font-semibold">Java Developer</span>
+            <span className="text-[10px] sm:text-xs text-white/40 block uppercase">Role</span>
+            <span className="text-orange-400 font-semibold truncate block">Java Developer</span>
           </div>
           <div>
-            <span className="text-xs text-white/40 block uppercase">Education</span>
-            <span className="text-white font-semibold">B.Tech CSE (AKTU)</span>
+            <span className="text-[10px] sm:text-xs text-white/40 block uppercase">Education</span>
+            <span className="text-white font-semibold truncate block">B.Tech CSE (AKTU)</span>
           </div>
           <div>
-            <span className="text-xs text-white/40 block uppercase">Focus</span>
-            <span className="text-accent-mint font-semibold">Backend & Full Stack</span>
+            <span className="text-[10px] sm:text-xs text-white/40 block uppercase">Focus</span>
+            <span className="text-accent-mint font-semibold truncate block">Backend & Full Stack</span>
           </div>
         </div>
       </div>

@@ -73,7 +73,7 @@ export default function JourneyItem({ item, index = 0 }) {
       </div>
 
       {/* Content Card */}
-      <div className={`w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-[#1E1E1E] p-6 sm:p-8 rounded-2xl border border-white/10 group-hover:border-accent-cyan/40 transition-all duration-300 relative overflow-hidden ${
+      <div className={`w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-[#1E1E1E] p-4 sm:p-6 md:p-8 rounded-2xl border border-white/10 group-hover:border-accent-cyan/40 transition-all duration-300 relative overflow-hidden ${
         isEven ? 'md:text-left' : 'md:text-left'
       }`}>
         {/* Subtle corner glow */}
@@ -97,7 +97,7 @@ export default function JourneyItem({ item, index = 0 }) {
         </div>
 
         {/* Title */}
-        <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-accent-cyan transition-colors">
+        <h3 className="text-lg sm:text-2xl font-bold text-white mb-1 group-hover:text-accent-cyan transition-colors">
           {item.title}
         </h3>
 

@@ -78,10 +78,10 @@ export default function Contact() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-16">
         {/* Left Column: Form */}
         <div className="lg:col-span-7">
-          <div className="bg-[#1E1E1E] p-8 sm:p-10 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#1E1E1E] p-5 sm:p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent-cyan/10 rounded-full blur-3xl pointer-events-none" />
 
             {status === 'success' ? (

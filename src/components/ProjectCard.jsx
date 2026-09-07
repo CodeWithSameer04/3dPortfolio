@@ -183,11 +183,11 @@ export default function ProjectCard({ project, index = 0 }) {
       />
 
       {/* Main card grid container */}
-      <div className="p-6 sm:p-8 lg:p-10 flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+      <div className="p-4 sm:p-6 lg:p-10 flex flex-col lg:grid lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center">
         {/* =================================================================== */}
         {/* LEFT COLUMN: SOFTWARE MOCKUP + THUMBNAIL SWITCHER (7 Cols)          */}
         {/* =================================================================== */}
-        <div className="w-full lg:col-span-7 flex flex-col gap-3.5">
+        <div className="w-full lg:col-span-7 flex flex-col gap-3">
           {/* Mockup Frame with Ambient Shadow */}
           <div className="relative w-full rounded-2xl bg-[#0F1015] border border-white/10 overflow-hidden shadow-2xl transition-all duration-300 group-hover:border-white/20">
             {/* Glow backing */}
@@ -196,28 +196,28 @@ export default function ProjectCard({ project, index = 0 }) {
             />
 
             {/* Mockup Header bar */}
-            <div className="relative px-4 py-2.5 bg-[#14151B] border-b border-white/10 flex items-center justify-between text-xs select-none">
+            <div className="relative px-3.5 sm:px-4 py-2 sm:py-2.5 bg-[#14151B] border-b border-white/10 flex items-center justify-between text-xs select-none">
               {/* Window controls */}
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                <span className="ml-2 text-[11px] font-mono text-slate-400/80 truncate max-w-[140px] sm:max-w-xs">
+                <span className="ml-2 text-[10.5px] sm:text-[11px] font-mono text-slate-400/80 truncate max-w-[130px] sm:max-w-xs">
                   {project.slug}.exe
                 </span>
               </div>
 
               {/* Active view indicator */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className={`w-1.5 h-1.5 rounded-full ${theme.dotColor} animate-pulse`} />
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                <span className="text-[9.5px] sm:text-[10px] font-mono uppercase tracking-wider text-slate-400">
                   {currentView.label}
                 </span>
               </div>
             </div>
 
             {/* Mockup Canvas */}
-            <div className="relative h-[270px] sm:h-[310px] md:h-[340px] w-full p-2.5 sm:p-3 overflow-hidden">
+            <div className="relative h-[280px] sm:h-[310px] md:h-[340px] w-full p-2 sm:p-3 overflow-hidden">
               <ProjectMockup project={project} viewMode={currentView.id} />
             </div>
           </div>
@@ -225,7 +225,7 @@ export default function ProjectCard({ project, index = 0 }) {
           {/* View Mode Thumbnails & Controls Bar */}
           <div className="flex items-center justify-between gap-2 pt-0.5 select-none">
             {/* 3 View Mode Selector Buttons */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {VIEW_MODES.map((mode, idx) => {
                 const IconComponent = mode.icon;
                 const isActive = activeViewIndex === idx;
@@ -233,7 +233,7 @@ export default function ProjectCard({ project, index = 0 }) {
                   <button
                     key={mode.id}
                     onClick={() => setActiveViewIndex(idx)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all ${
+                    className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-mono font-medium transition-all ${
                       isActive
                         ? `${theme.activeThumbBorder} shadow-sm shadow-black/40`
                         : 'bg-white/[0.03] border border-white/10 text-slate-400 hover:text-white hover:bg-white/[0.08]'
@@ -309,11 +309,11 @@ export default function ProjectCard({ project, index = 0 }) {
             </p>
 
             {/* Tech Stack Pills */}
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8">
               {techList.map((tech) => (
                 <span
                   key={tech}
-                  className="text-xs font-mono px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-slate-300 font-medium hover:border-white/20 transition-colors"
+                  className="text-[11px] sm:text-xs font-mono px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/[0.04] border border-white/10 text-slate-300 font-medium hover:border-white/20 transition-colors"
                 >
                   {tech}
                 </span>
@@ -322,27 +322,27 @@ export default function ProjectCard({ project, index = 0 }) {
           </div>
 
           {/* Action Buttons & Quote Footer */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Action Buttons Row */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               {/* Primary: View Project (Live Demo if exists, else Case Study) */}
               {hasLiveDemo ? (
                 <a
                   href={liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all ${theme.primaryBtnClass}`}
+                  className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all ${theme.primaryBtnClass}`}
                 >
                   <span>View Project</span>
-                  <ExternalLink className="w-4 h-4" />
+                  <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </a>
               ) : (
                 <Link
                   to={`/projects/${project.slug}`}
-                  className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all ${theme.primaryBtnClass}`}
+                  className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all ${theme.primaryBtnClass}`}
                 >
                   <span>View Project</span>
-                  <ArrowUpRight className="w-4 h-4" />
+                  <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Link>
               )}
 
@@ -352,9 +352,9 @@ export default function ProjectCard({ project, index = 0 }) {
                   href={githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide bg-white/[0.05] border border-white/10 hover:bg-white/10 text-white transition-colors"
+                  className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide bg-white/[0.05] border border-white/10 hover:bg-white/10 text-white transition-colors"
                 >
-                  <Github className="w-4 h-4" />
+                  <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>GitHub</span>
                 </a>
               )}
@@ -363,10 +363,10 @@ export default function ProjectCard({ project, index = 0 }) {
               {hasLiveDemo && (
                 <Link
                   to={`/projects/${project.slug}`}
-                  className="inline-flex items-center gap-1 px-3 py-2 text-xs font-mono text-slate-400 hover:text-white transition-colors"
+                  className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-mono text-slate-400 hover:text-white transition-colors"
                 >
                   <span>Case Study</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+                  <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </Link>
               )}
             </div>
