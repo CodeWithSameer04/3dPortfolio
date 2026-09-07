@@ -110,7 +110,7 @@ export default function Home() {
           </div>
 
           {/* Right Column: 3D Scene (Living Java Code) */}
-          <div className="lg:col-span-5 relative w-full h-[380px] sm:h-[480px] lg:h-[580px] flex items-center justify-center">
+          <div className="lg:col-span-5 relative w-full h-[380px] sm:h-[460px] md:h-[500px] lg:h-[560px] flex items-center justify-center">
             <Suspense fallback={<WebGLFallback />}>
               <HeroScene />
             </Suspense>
