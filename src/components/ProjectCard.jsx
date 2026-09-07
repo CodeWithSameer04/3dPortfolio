@@ -217,7 +217,7 @@ export default function ProjectCard({ project, index = 0 }) {
             </div>
 
             {/* Mockup Canvas */}
-            <div className="relative h-[280px] sm:h-[310px] md:h-[340px] w-full p-2 sm:p-3 overflow-hidden">
+            <div className="relative h-[330px] sm:h-[320px] md:h-[340px] w-full p-2 sm:p-3 overflow-hidden">
               <ProjectMockup project={project} viewMode={currentView.id} />
             </div>
           </div>
