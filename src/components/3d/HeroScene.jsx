@@ -36,18 +36,19 @@ export default function HeroScene() {
     return <WebGLFallback />;
   }
 
-  // Device-tuned camera field of view and distance
-  const cameraFov = isMobile ? 50 : isTablet ? 46 : 42;
+  // Device-tuned camera field of view and closer distance for grander presence
+  const cameraFov = isMobile ? 48 : isTablet ? 44 : 41;
+  const cameraZ = isMobile ? 4.1 : isTablet ? 4.3 : 4.4;
 
   return (
     <div className="relative w-full h-full flex items-center justify-center overflow-visible">
       {/* Calm, soft ambient background aura */}
-      <div className="absolute w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
-      <div className="absolute w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-indigo-600/10 blur-[130px] pointer-events-none translate-x-6 translate-y-6" />
+      <div className="absolute w-72 h-72 sm:w-96 sm:h-96 md:w-[480px] md:h-[480px] rounded-full bg-blue-600/15 blur-[130px] pointer-events-none" />
+      <div className="absolute w-72 h-72 sm:w-96 sm:h-96 md:w-[480px] md:h-[480px] rounded-full bg-cyan-500/10 blur-[140px] pointer-events-none translate-x-8 translate-y-8" />
 
       <CanvasErrorBoundary fallback={<WebGLFallback />}>
         <Canvas
-          camera={{ position: [0, 0, 5.8], fov: cameraFov }}
+          camera={{ position: [0, 0, cameraZ], fov: cameraFov }}
           dpr={[1, isMobile ? 1.5 : 2]}
           gl={{
             antialias: true,
@@ -58,10 +59,10 @@ export default function HeroScene() {
         >
           <Suspense fallback={null}>
             {/* Ambient and directional lights */}
-            <ambientLight intensity={0.85} />
-            <directionalLight position={[5, 5, 5]} intensity={1.2} color="#FFFFFF" />
-            <directionalLight position={[-5, -3, -2]} intensity={0.8} color="#00E5FF" />
-            <pointLight position={[0, 2, 3]} intensity={1.2} color="#38BDF8" distance={10} />
+            <ambientLight intensity={0.9} />
+            <directionalLight position={[5, 5, 5]} intensity={1.3} color="#FFFFFF" />
+            <directionalLight position={[-5, -3, -2]} intensity={0.9} color="#00E5FF" />
+            <pointLight position={[0, 2, 3]} intensity={1.3} color="#38BDF8" distance={12} />
 
             {/* Living Java Code centerpiece with responsive sizing and formatting */}
             <LivingJavaCode
@@ -70,7 +71,11 @@ export default function HeroScene() {
               isTablet={isTablet}
               isTouch={isTouch}
             />
-            <CameraRig reducedMotion={reducedMotion} />
+            <CameraRig
+              reducedMotion={reducedMotion}
+              isMobile={isMobile}
+              isTablet={isTablet}
+            />
           </Suspense>
         </Canvas>
       </CanvasErrorBoundary>

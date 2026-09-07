@@ -26,30 +26,25 @@ export default function LivingJavaCode({
   const { viewport } = useThree();
 
   const { cardWidth, cardHeight } = useMemo(() => {
-    let widthRatio;
-    let maxWidth;
-    if (isMobile) {
-      widthRatio = 0.88; // 88% of screen width on phone
-      maxWidth = 3.2;
-    } else if (isTablet) {
-      widthRatio = 0.80; // 80% on tablet/iPad
-      maxWidth = 3.7;
-    } else {
-      widthRatio = 0.74; // 74% on desktop
-      maxWidth = 4.1;
-    }
+    const cardAspect = isMobile ? 1.16 : isTablet ? 1.22 : 1.28;
+    // Fill ~94% on mobile, ~90% on tablet, ~88% on desktop
+    const fillFactor = isMobile ? 0.94 : isTablet ? 0.90 : 0.88;
 
-    const w = Math.min(Math.max(viewport.width * widthRatio, 2.5), maxWidth);
-    const aspect = isMobile ? 1.18 : isTablet ? 1.25 : 1.30;
-    const h = w / aspect;
+    // Both horizontal and vertical bounds are respected so the card is as large as possible
+    // without ever clipping during 3D rotation / floating
+    const maxWFromWidth = viewport.width * fillFactor;
+    const maxWFromHeight = (viewport.height * fillFactor) * cardAspect;
+
+    const w = Math.min(maxWFromWidth, maxWFromHeight);
+    const h = w / cardAspect;
     return { cardWidth: w, cardHeight: h };
-  }, [viewport.width, isMobile, isTablet]);
+  }, [viewport.width, viewport.height, isMobile, isTablet]);
 
   // High-DPI canvas adapted for device density and aspect ratio
   const { canvas, ctx, texture, canvasWidth, canvasHeight } = useMemo(() => {
     const canvas = document.createElement('canvas');
-    const canvasWidth = isMobile ? 1000 : isTablet ? 1100 : 1200;
-    const canvasHeight = isMobile ? 850 : isTablet ? 880 : 920;
+    const canvasWidth = isMobile ? 1200 : isTablet ? 1350 : 1440;
+    const canvasHeight = isMobile ? 1020 : isTablet ? 1080 : 1120;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
@@ -136,7 +131,7 @@ export default function LivingJavaCode({
     ctx.fill();
 
     // 2. Window Header Bar
-    const headerHeight = isMobile ? 64 : 70;
+    const headerHeight = isMobile ? 74 : 80;
     ctx.fillStyle = '#1B1B1F';
     ctx.beginPath();
     ctx.roundRect(0, 0, w, headerHeight, [24, 24, 0, 0]);
@@ -151,9 +146,9 @@ export default function LivingJavaCode({
     ctx.stroke();
 
     // Window controls (macOS style dots)
-    const dotStartX = isMobile ? 28 : 36;
-    const dotGap = isMobile ? 20 : 26;
-    const dotRadius = isMobile ? 5.5 : 6.5;
+    const dotStartX = isMobile ? 32 : 38;
+    const dotGap = isMobile ? 22 : 28;
+    const dotRadius = isMobile ? 6 : 7;
     const dots = [
       { x: dotStartX, color: '#EF4444' }, // Close
       { x: dotStartX + dotGap, color: '#F59E0B' }, // Minimize
@@ -167,46 +162,46 @@ export default function LivingJavaCode({
     });
 
     // Active File Tab
-    const tabX = isMobile ? 95 : 130;
-    const tabWidth = isMobile ? 190 : 230;
-    const tabHeight = headerHeight - 14;
+    const tabX = isMobile ? 110 : 145;
+    const tabWidth = isMobile ? 210 : 250;
+    const tabHeight = headerHeight - 16;
 
     ctx.fillStyle = '#141416';
     ctx.beginPath();
-    ctx.roundRect(tabX, 14, tabWidth, tabHeight, [12, 12, 0, 0]);
+    ctx.roundRect(tabX, 16, tabWidth, tabHeight, [12, 12, 0, 0]);
     ctx.fill();
 
     // Subtle top border highlight on active tab
     ctx.strokeStyle = '#00E5FF';
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(tabX + 6, 14);
-    ctx.lineTo(tabX + tabWidth - 6, 14);
+    ctx.moveTo(tabX + 6, 16);
+    ctx.lineTo(tabX + tabWidth - 6, 16);
     ctx.stroke();
 
     // Tab title: Coffee icon + Developer.java
     ctx.fillStyle = '#E2E8F0';
     ctx.font = isMobile
-      ? 'bold 17px "JetBrains Mono", monospace'
-      : 'bold 18px "JetBrains Mono", monospace';
-    ctx.fillText('☕ Developer.java', tabX + (isMobile ? 16 : 24), headerHeight / 2 + 6);
+      ? 'bold 18px "JetBrains Mono", monospace'
+      : 'bold 19px "JetBrains Mono", monospace';
+    ctx.fillText('☕ Developer.java', tabX + (isMobile ? 18 : 24), headerHeight / 2 + 6);
 
     // Right-side Status / Runtime indicator
-    const statusDotX = isMobile ? w - 110 : w - 180;
+    const statusDotX = isMobile ? w - 120 : w - 200;
     ctx.fillStyle = '#10B981';
     ctx.beginPath();
-    ctx.arc(statusDotX, headerHeight / 2, 4, 0, Math.PI * 2);
+    ctx.arc(statusDotX, headerHeight / 2, 4.5, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = '#94A3B8';
     ctx.font = isMobile
-      ? 'bold 14px "JetBrains Mono", monospace'
-      : '15px "JetBrains Mono", monospace';
-    ctx.fillText(isMobile ? 'JDK 21' : 'JDK 21 • RUNNING', statusDotX + 12, headerHeight / 2 + 5);
+      ? 'bold 15px "JetBrains Mono", monospace'
+      : '16px "JetBrains Mono", monospace';
+    ctx.fillText(isMobile ? 'JDK 21' : 'JDK 21 • RUNNING', statusDotX + 14, headerHeight / 2 + 5);
 
     // 3. Gutter Background (Line Numbers column)
-    const gutterWidth = isMobile ? 64 : isTablet ? 78 : 90;
-    const statusHeight = isMobile ? 44 : 50;
+    const gutterWidth = isMobile ? 76 : isTablet ? 90 : 100;
+    const statusHeight = isMobile ? 50 : 54;
     const statusY = h - statusHeight;
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
@@ -220,10 +215,10 @@ export default function LivingJavaCode({
     ctx.stroke();
 
     // 4. Render Code Lines with device-tuned typography
-    const startY = isMobile ? 116 : isTablet ? 118 : 120;
-    const lineHeight = isMobile ? 48 : isTablet ? 45 : 42;
-    const codeStartX = isMobile ? 80 : isTablet ? 98 : 115;
-    const codeFontSize = isMobile ? 26 : isTablet ? 23 : 21;
+    const startY = isMobile ? 130 : isTablet ? 135 : 138;
+    const lineHeight = isMobile ? 54 : isTablet ? 50 : 47;
+    const codeStartX = isMobile ? 96 : isTablet ? 114 : 128;
+    const codeFontSize = isMobile ? 28 : isTablet ? 25 : 23;
 
     javaLines.forEach((line, idx) => {
       const lineY = startY + idx * lineHeight;
@@ -231,27 +226,27 @@ export default function LivingJavaCode({
 
       // Active Line Execution Highlight
       if (isExecuting) {
-        ctx.fillStyle = 'rgba(0, 229, 255, 0.09)';
-        ctx.fillRect(gutterWidth + 1, lineY - 32, w - gutterWidth - 1, lineHeight);
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.10)';
+        ctx.fillRect(gutterWidth + 1, lineY - 35, w - gutterWidth - 1, lineHeight);
 
         // Left indicator bar in gutter
         ctx.fillStyle = '#00E5FF';
-        ctx.fillRect(gutterWidth - 4, lineY - 32, 4, lineHeight);
+        ctx.fillRect(gutterWidth - 5, lineY - 35, 5, lineHeight);
 
         // Execution arrow
         ctx.fillStyle = '#00F5A0';
         ctx.font = isMobile
-          ? 'bold 14px "JetBrains Mono", monospace'
-          : 'bold 16px "JetBrains Mono", monospace';
-        ctx.fillText('▶', isMobile ? 12 : 18, lineY - 4);
+          ? 'bold 16px "JetBrains Mono", monospace'
+          : 'bold 18px "JetBrains Mono", monospace';
+        ctx.fillText('▶', isMobile ? 14 : 20, lineY - 4);
       }
 
       // Line number
       ctx.fillStyle = isExecuting ? '#00E5FF' : '#475569';
       ctx.font = isMobile
-        ? '15px "JetBrains Mono", monospace'
-        : '16px "JetBrains Mono", monospace';
-      ctx.fillText(line.num, isMobile ? 28 : 38, lineY - 4);
+        ? '16px "JetBrains Mono", monospace'
+        : '17px "JetBrains Mono", monospace';
+      ctx.fillText(line.num, isMobile ? 32 : 42, lineY - 4);
 
       // Line Tokens
       let tokenX = codeStartX;
@@ -266,8 +261,8 @@ export default function LivingJavaCode({
       // Blinking Cursor on active executing line
       if (isExecuting && showCursor) {
         ctx.fillStyle = '#00E5FF';
-        const cursorH = isMobile ? 28 : 26;
-        ctx.fillRect(tokenX + 6, lineY - cursorH - 2, 3.5, cursorH);
+        const cursorH = isMobile ? 30 : 28;
+        ctx.fillRect(tokenX + 6, lineY - cursorH - 2, 4, cursorH);
       }
     });
 
@@ -287,8 +282,8 @@ export default function LivingJavaCode({
     // Status texts
     ctx.fillStyle = '#00F5A0';
     ctx.font = isMobile
-      ? 'bold 14px "JetBrains Mono", monospace'
-      : 'bold 15px "JetBrains Mono", monospace';
+      ? 'bold 15px "JetBrains Mono", monospace'
+      : 'bold 16px "JetBrains Mono", monospace';
 
     let statusMsg;
     if (isMobile) {
@@ -306,21 +301,21 @@ export default function LivingJavaCode({
           ? '⚡ Executing: build(idea) -> compiling reactive components'
           : '✓ Executing: app.deploy() -> live at 60 FPS';
     }
-    ctx.fillText(statusMsg, isMobile ? 16 : 24, statusY + (isMobile ? 27 : 31));
+    ctx.fillText(statusMsg, isMobile ? 18 : 24, statusY + (isMobile ? 31 : 33));
 
     ctx.fillStyle = '#64748B';
     ctx.font = isMobile
-      ? '13px "JetBrains Mono", monospace'
-      : '14px "JetBrains Mono", monospace';
+      ? '14px "JetBrains Mono", monospace'
+      : '15px "JetBrains Mono", monospace';
     ctx.fillText(
       isMobile ? 'Java 21' : 'UTF-8   LF   Java 21',
-      isMobile ? w - 90 : w - 190,
-      statusY + (isMobile ? 27 : 31)
+      isMobile ? w - 100 : w - 210,
+      statusY + (isMobile ? 31 : 33)
     );
 
     // Clean outer perimeter border
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.roundRect(1, 1, w - 2, h - 2, 24);
     ctx.stroke();
@@ -405,7 +400,7 @@ export default function LivingJavaCode({
 
       {/* Main 3D Living Code Card with dynamic aspect ratio */}
       <mesh ref={meshRef} position={[0, 0, 0]}>
-        <boxGeometry args={[cardWidth, cardHeight, 0.06]} />
+        <boxGeometry args={[cardWidth, cardHeight, 0.08]} />
         {/* Six face materials: only the front face (+Z, index 4) gets the IDE texture */}
         <meshStandardMaterial attach="material-0" color="#18181C" roughness={0.3} metalness={0.6} />
         <meshStandardMaterial attach="material-1" color="#18181C" roughness={0.3} metalness={0.6} />

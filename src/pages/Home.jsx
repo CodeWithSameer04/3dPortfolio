@@ -52,7 +52,7 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center z-10">
           {/* Left Column: Hero Copy & Actions */}
-          <div className="lg:col-span-7 flex flex-col justify-center text-left">
+          <div className="lg:col-span-6 flex flex-col justify-center text-left">
             {/* Developer Identity Status badge (Section 51) */}
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-widest uppercase mb-4 glass-panel border border-white/10 text-white w-fit">
               <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
@@ -60,7 +60,7 @@ export default function Home() {
             </div>
 
             {/* Main Headline (Section 52) */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-4 leading-[1.1]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-4 leading-[1.1]">
               Java Developer <br />
               building software that <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-accent-cyan">
@@ -110,7 +110,7 @@ export default function Home() {
           </div>
 
           {/* Right Column: 3D Scene (Living Java Code) */}
-          <div className="lg:col-span-5 relative w-full h-[380px] sm:h-[460px] md:h-[500px] lg:h-[560px] flex items-center justify-center">
+          <div className="lg:col-span-6 relative w-full h-[420px] sm:h-[480px] md:h-[540px] lg:h-[620px] flex items-center justify-center">
             <Suspense fallback={<WebGLFallback />}>
               <HeroScene />
             </Suspense>
