@@ -73,14 +73,7 @@ export default function Navbar() {
                 }`
               }
             >
-              {({ isActive }) => (
-                <>
-                  {link.name}
-                  {isActive && (
-                    <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-accent-mint rounded-full shadow-sm shadow-accent-mint" />
-                  )}
-                </>
-              )}
+              {link.name}
             </NavLink>
           ))}
         </nav>
